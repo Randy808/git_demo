@@ -1,0 +1,55 @@
+#LOGISTIC REGRESSION
+
+import math
+
+#X = [[1,6,5,1], [1,3,2,1], [1,6,5,1]]
+#T = [1,3,4,5]
+
+#What I hope is happenning in this example is I'm slowly overshooting local minima and am stuck fluctuating around it
+X = [[3,4],[435,3],[6,8]]
+T = [1,1]
+y = [1,0,1]
+
+def sigmoid(x):
+    return 1/(1 + math.e**-(x))
+
+def cost(X,y):
+    estimates = []
+    cost = 0;
+    for i in range(len(X)):
+        sum = 0
+        for j in range(len(X[1])):
+            sum += T[j]*X[i][j]
+        cost += (sigmoid(sum) - y[i])**2
+    return (1/2*len(X))*cost
+
+def gradient(X,y,t): #Not convex cost tho
+    estimates = []
+    gradient = 0;
+    for i in range(len(X)):
+        sum = 0
+        for j in range(len(X[i])):
+            sum += T[j]*X[i][j]
+        gradient += (sigmoid(sum) - y[i])*X[i][j]
+    return (1/len(X))*gradient
+
+
+iterations = 1000;
+alpha = .034
+costLast = 0
+f = False
+for l in range(iterations):
+    currCost = cost(X,y)
+    print("CUR: " + str(currCost) )
+    if(costLast < currCost):
+        f = True
+    else:
+        f = False
+    tempT = []
+    for t in range(len(T)):
+        tempT.append(t - alpha*gradient(X,y,t))
+        if(f):
+            print("\tt" + str(t) + "   :" + str(gradient(X,y,t)))
+           # print(T)
+    T = tempT
+    costLast = currCost
